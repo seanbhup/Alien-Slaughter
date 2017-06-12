@@ -4,6 +4,9 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 	public float speed = 15.0f;
 	public float paddingOnShip = 1f;
+	public GameObject projectile;
+	public float projectileSpeed;
+	public float firingRate = 0.2f;
 	
 	float xMin;
 	float xMax;
@@ -15,8 +18,20 @@ public class PlayerController : MonoBehaviour {
 		xMin = leftMost.x + paddingOnShip;
 		xMax = rightMost.x - paddingOnShip;
 	}
+	
+	void Fire(){
+		GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
+		beam.rigidbody2D.velocity = new Vector3(0,projectileSpeed,0);
+	}
 
 	void Update () {
+		if(Input.GetKeyDown(KeyCode.A)){
+			InvokeRepeating("Fire",0.000001f, firingRate);
+		}
+		if(Input.GetKeyUp(KeyCode.A)){
+			CancelInvoke("Fire");
+		}
+	
 		if(Input.GetKey(KeyCode.LeftArrow)){
 		
 //			transform.position += new Vector3(-speed * Time.deltaTime, 0, 0);
