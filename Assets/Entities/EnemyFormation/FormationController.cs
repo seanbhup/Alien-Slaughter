@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemySpawner : MonoBehaviour {
+public class FormationController : MonoBehaviour {
 
 	public GameObject enemyPrefab;
 	public float width = 10f;
@@ -21,8 +21,10 @@ public class EnemySpawner : MonoBehaviour {
 		Vector3 rightBoundary = Camera.main.ViewportToWorldPoint(new Vector3(1,0, distanceToCamera));
 		xMax = rightBoundary.x + 1;
 		xMin = leftBoundary.x + 1;
-		
-		
+		SpawnEnemies();
+	}
+	
+	void SpawnEnemies(){
 		foreach(Transform child in transform){
 			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
 			enemy.transform.parent = child;
@@ -44,13 +46,22 @@ public class EnemySpawner : MonoBehaviour {
 		}
 		
 		float rightEdgeOfFormation = transform.position.x + (0.5f * width);
-		float leftEdgeyOfFormation = transform.position.x - (0.5f * width);
-		
-		if(transform.position.x < xMin){
-			movingRight = true;
+		float leftEdgeOfFormation = transform.position.x - (0.5f * width);
+		if(leftEdgeOfFormation < xMin || rightEdgeOfFormation > xMax){
+			movingRight = !movingRight;
 		}
-		else if(rightEdgeOfFormation > xMax){
-			movingRight = false;
+		if(AllMembersDead()){
+			Debug.Log ("Empty Formation");
+			SpawnEnemies();
 		}
+	}
+	
+	bool AllMembersDead(){
+		foreach(Transform childPositionGameObject in transform){
+			if(childPositionGameObject.childCount > 0){
+				return false;
+			}
+		}
+		return true;
 	}
 }
