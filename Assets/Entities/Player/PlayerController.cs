@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour {
 	public float firingRate = 0.2f;
 	public float health = 250f;
 	
+	public AudioClip fireSound;
+	
 	float xMin;
 	float xMax;
 	
@@ -22,9 +24,10 @@ public class PlayerController : MonoBehaviour {
 	
 	void Fire(){
 	//makes it so projectile doesnt spawn on player, killing him.
-		Vector3 offset = new Vector3(0,1,0);
-		GameObject beam = Instantiate(projectile, transform.position+offset, Quaternion.identity) as GameObject;
+	//Vector3 offset = new Vector3(0,1,0);
+		GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
 		beam.rigidbody2D.velocity = new Vector3(0,projectileSpeed,0);
+		AudioSource.PlayClipAtPoint(fireSound, transform.position);
 	}
 
 	void Update () {
